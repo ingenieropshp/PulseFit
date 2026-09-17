@@ -18,7 +18,7 @@ import type { Role } from '../types/models'
 type Mode = 'login' | 'register'
 
 export function AuthView() {
-  const { session, profile, loading, signIn, signUp } = useAuth()
+  const { session, profile, loading, verifyingRole, signIn, signUp } = useAuth()
   const [mode, setMode] = useState<Mode>('login')
   const [role, setRole] = useState<Role>('atleta')
   const [fullName, setFullName] = useState('')
@@ -30,7 +30,11 @@ export function AuthView() {
   const [notice, setNotice] = useState<string | null>(null)
 
   // Si ya hay sesión activa, saltamos directo al panel correspondiente.
-  if (!loading && session) {
+  // Mientras signIn() está verificando que el rol elegido coincida con el
+  // real (verifyingRole), NO navegamos todavía: si resulta que no coincide,
+  // la sesión se cierra sola y esta pantalla debe seguir aquí mostrando el
+  // error, no haber saltado ya al panel para luego rebotar de vuelta.
+  if (!loading && !verifyingRole && session) {
     if (!profile) {
       // Perfil aún sincronizándose (trigger recién disparado); esperamos un tick.
       return (
