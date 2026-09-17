@@ -82,8 +82,10 @@ export function ClientDashboard() {
         {/* Header */}
         <header className="px-5 pt-6 pb-3 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-pulse-surface border border-pulse-lime flex items-center justify-center font-black text-pulse-lime text-xs">
-              ⚡
+            <div className="w-7 h-7 rounded-lg bg-pulse-surface border border-pulse-lime flex items-center justify-center text-pulse-lime shrink-0">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true">
+                <path d="M7 2v11h3v9l7-12h-4l4-8z" />
+              </svg>
             </div>
             <span className="font-display font-extrabold tracking-wider text-sm">
               PULSE<span className="text-pulse-lime">FIT</span>
