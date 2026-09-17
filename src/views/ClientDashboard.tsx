@@ -20,6 +20,7 @@ import { useAuth } from '../context/AuthContext'
 import { useTodayWorkout } from '../hooks/useTodayWorkout'
 import { useRoutinePreview } from '../hooks/useRoutinePreview'
 import { BottomNav, type ClientTab } from '../components/BottomNav'
+import { ChooseCoachView } from '../components/ChooseCoachView'
 import { RoutinePreviewList } from '../components/RoutinePreviewList'
 import { StickFigure } from '../components/StickFigure'
 import { ExerciseDemoModal, type DemoExercise } from '../components/ExerciseDemoModal'
@@ -75,6 +76,12 @@ export function ClientDashboard() {
   const todayLabel = capitalize(WEEKDAY_LABEL.format(new Date()))
   const completedCount = workout?.exercises.filter((e) => e.log?.completed).length ?? 0
   const totalCount = workout?.exercises.length ?? 0
+
+  // Un atleta sin entrenador asignado todavía no tiene nada que ver aquí:
+  // primero elige con quién va a hacer su proceso.
+  if (profile && !profile.coach_id) {
+    return <ChooseCoachView />
+  }
 
   return (
     <div className="flex justify-center bg-black min-h-screen font-sans text-white">
