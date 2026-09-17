@@ -13,10 +13,15 @@ import {
   RotateCcw,
   X,
   LogOut,
+  ChevronDown,
+  CalendarDays,
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useTodayWorkout } from '../hooks/useTodayWorkout'
+import { useRoutinePreview } from '../hooks/useRoutinePreview'
 import { BottomNav, type ClientTab } from '../components/BottomNav'
+import { RoutinePreviewList } from '../components/RoutinePreviewList'
+import { getExerciseVisual } from '../lib/exerciseVisuals'
 import type { TodayExercise } from '../types/models'
 
 const WEEKDAY_LABEL = new Intl.DateTimeFormat('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })
@@ -35,12 +40,14 @@ export function ClientDashboard() {
     toggleExercise,
     finishWorkout,
   } = useTodayWorkout()
+  const { days: previewDays, loading: previewLoading } = useRoutinePreview()
 
   const [activeTab, setActiveTab] = useState<ClientTab>('routine')
   const [showCelebration, setShowCelebration] = useState(false)
   const [showTimer, setShowTimer] = useState(false)
   const [timerSeconds, setTimerSeconds] = useState(60)
   const [isTimerRunning, setIsTimerRunning] = useState(false)
+  const [showFullRoutine, setShowFullRoutine] = useState(false)
 
   useEffect(() => {
     if (!isTimerRunning) return
@@ -219,6 +226,8 @@ export function ClientDashboard() {
                   <div className="space-y-2">
                     {workout.exercises.map((exercise) => {
                       const completed = exercise.log?.completed ?? false
+                      const visual = getExerciseVisual(exercise.name)
+                      const ExerciseIcon = visual.icon
                       return (
                         <div
                           key={exercise.id}
@@ -230,8 +239,10 @@ export function ClientDashboard() {
                           }`}
                         >
                           <div className="flex items-center gap-3 min-w-0">
-                            <div className="w-11 h-11 rounded-lg bg-pulse-card flex items-center justify-center shrink-0 text-pulse-muted">
-                              <Dumbbell size={18} />
+                            <div
+                              className={`w-11 h-11 rounded-lg bg-pulse-card flex items-center justify-center shrink-0 ${visual.colorClass}`}
+                            >
+                              <ExerciseIcon size={18} />
                             </div>
                             <div className="min-w-0">
                               <p
@@ -277,6 +288,38 @@ export function ClientDashboard() {
                     </button>
                   </div>
                 </>
+              )}
+
+              {previewDays.length > 0 && (
+                <div className="pt-3">
+                  <button
+                    onClick={() => setShowFullRoutine((v) => !v)}
+                    className="w-full flex items-center justify-between p-3 rounded-xl bg-pulse-surface border border-pulse-border"
+                  >
+                    <span className="flex items-center gap-2 text-xs font-bold text-white">
+                      <CalendarDays size={16} className="text-pulse-lime" />
+                      Ver ejemplo de cada sesión ({previewDays.length} días)
+                    </span>
+                    <ChevronDown
+                      size={16}
+                      className={`text-pulse-muted transition-transform ${
+                        showFullRoutine ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+
+                  {showFullRoutine && (
+                    <div className="mt-2">
+                      {previewLoading ? (
+                        <p className="text-center text-pulse-muted py-6 text-sm">
+                          Cargando tu rutina completa…
+                        </p>
+                      ) : (
+                        <RoutinePreviewList days={previewDays} />
+                      )}
+                    </div>
+                  )}
+                </div>
               )}
             </>
           )}
