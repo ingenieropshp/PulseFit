@@ -1,0 +1,13 @@
+{
+  "name": "pulsefit",
+  "compatibility_date": "2026-09-17",
+  "assets": {
+    // Carpeta que genera "npm run build".
+    "directory": "./dist",
+    // Como es una SPA con react-router (rutas como /dashboard, /coach, etc.),
+    // cualquier ruta no encontrada debe servir index.html en vez de un 404,
+    // para que el enrutado del lado del cliente funcione al recargar la página
+    // o al entrar directo a una URL como pulsefit.pages.dev/dashboard.
+    "not_found_handling": "single-page-application"
+  }
+}
