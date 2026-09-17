@@ -59,7 +59,7 @@ export function AuthView() {
     setSubmitting(true)
     try {
       if (mode === 'login') {
-        const { error: signInError } = await signIn(email, password)
+        const { error: signInError } = await signIn(email, password, role)
         if (signInError) setError(traducirError(signInError))
       } else {
         const { error: signUpError } = await signUp({ email, password, fullName, role })
