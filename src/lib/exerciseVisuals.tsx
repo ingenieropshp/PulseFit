@@ -56,6 +56,8 @@ const KEYWORD_RULES: { category: ExerciseCategory; keywords: string[] }[] = [
       'isquios',
       'pantorrilla',
       'gemelo',
+      'talon',
+      'elevacion de talones',
       'aductor',
       'abductor',
       'step up',
