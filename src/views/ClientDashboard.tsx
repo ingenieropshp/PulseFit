@@ -21,7 +21,10 @@ import { useTodayWorkout } from '../hooks/useTodayWorkout'
 import { useRoutinePreview } from '../hooks/useRoutinePreview'
 import { BottomNav, type ClientTab } from '../components/BottomNav'
 import { RoutinePreviewList } from '../components/RoutinePreviewList'
+import { StickFigure } from '../components/StickFigure'
+import { ExerciseDemoModal, type DemoExercise } from '../components/ExerciseDemoModal'
 import { getExerciseVisual } from '../lib/exerciseVisuals'
+import { detectMovementPattern } from '../lib/exercisePatterns'
 import type { TodayExercise } from '../types/models'
 
 const WEEKDAY_LABEL = new Intl.DateTimeFormat('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })
@@ -48,6 +51,7 @@ export function ClientDashboard() {
   const [timerSeconds, setTimerSeconds] = useState(60)
   const [isTimerRunning, setIsTimerRunning] = useState(false)
   const [showFullRoutine, setShowFullRoutine] = useState(false)
+  const [demoExercise, setDemoExercise] = useState<DemoExercise | null>(null)
 
   useEffect(() => {
     if (!isTimerRunning) return
@@ -227,7 +231,7 @@ export function ClientDashboard() {
                     {workout.exercises.map((exercise) => {
                       const completed = exercise.log?.completed ?? false
                       const visual = getExerciseVisual(exercise.name)
-                      const ExerciseIcon = visual.icon
+                      const pattern = detectMovementPattern(exercise.name)
                       return (
                         <div
                           key={exercise.id}
@@ -239,11 +243,16 @@ export function ClientDashboard() {
                           }`}
                         >
                           <div className="flex items-center gap-3 min-w-0">
-                            <div
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setDemoExercise(exercise)
+                              }}
+                              aria-label={`Ver ejemplo de ${exercise.name}`}
                               className={`w-11 h-11 rounded-lg bg-pulse-card flex items-center justify-center shrink-0 ${visual.colorClass}`}
                             >
-                              <ExerciseIcon size={18} />
-                            </div>
+                              <StickFigure pattern={pattern} size={28} />
+                            </button>
                             <div className="min-w-0">
                               <p
                                 className={`text-xs font-bold leading-tight truncate ${
@@ -410,6 +419,11 @@ export function ClientDashboard() {
             </div>
           )}
         </main>
+
+        {/* Modal de ejemplo de ejercicio (muñeco animado) */}
+        {demoExercise && (
+          <ExerciseDemoModal exercise={demoExercise} onClose={() => setDemoExercise(null)} />
+        )}
 
         {/* Modal de finalización */}
         {showCelebration && (

@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { getExerciseVisual } from '../lib/exerciseVisuals'
+import { detectMovementPattern } from '../lib/exercisePatterns'
+import { StickFigure } from './StickFigure'
+import { ExerciseDemoModal, type DemoExercise } from './ExerciseDemoModal'
 import type { RoutineDayPreview } from '../hooks/useRoutinePreview'
 
 interface RoutinePreviewListProps {
@@ -12,6 +15,7 @@ export function RoutinePreviewList({ days }: RoutinePreviewListProps) {
   const [expandedId, setExpandedId] = useState<string | null>(
     days.find((d) => d.isToday)?.id ?? days[0]?.id ?? null
   )
+  const [demoExercise, setDemoExercise] = useState<DemoExercise | null>(null)
 
   if (days.length === 0) {
     return (
@@ -25,7 +29,7 @@ export function RoutinePreviewList({ days }: RoutinePreviewListProps) {
     <div className="space-y-2">
       {days.map((day) => {
         const isExpanded = expandedId === day.id
-        const DayIcon = getExerciseVisual(day.exercises[0]?.name ?? '').icon
+        const dayPattern = detectMovementPattern(day.exercises[0]?.name ?? '')
 
         return (
           <div
@@ -40,7 +44,7 @@ export function RoutinePreviewList({ days }: RoutinePreviewListProps) {
             >
               <div className="flex items-center gap-2.5 min-w-0">
                 <div className="w-9 h-9 rounded-lg bg-pulse-card flex items-center justify-center shrink-0 text-pulse-muted">
-                  <DayIcon size={16} />
+                  <StickFigure pattern={dayPattern} size={22} />
                 </div>
                 <div className="text-left min-w-0">
                   <p className="text-xs font-bold text-white truncate flex items-center gap-1.5">
@@ -69,15 +73,19 @@ export function RoutinePreviewList({ days }: RoutinePreviewListProps) {
                 )}
                 {day.exercises.map((exercise) => {
                   const visual = getExerciseVisual(exercise.name)
-                  const Icon = visual.icon
+                  const pattern = detectMovementPattern(exercise.name)
                   return (
-                    <div key={exercise.id} className="p-2 rounded-lg bg-pulse-card flex items-center gap-2.5">
+                    <button
+                      key={exercise.id}
+                      onClick={() => setDemoExercise(exercise)}
+                      className="w-full p-2 rounded-lg bg-pulse-card flex items-center gap-2.5 text-left"
+                    >
                       <div
-                        className={`w-8 h-8 rounded-md bg-pulse-surface flex items-center justify-center shrink-0 ${visual.colorClass}`}
+                        className={`w-9 h-9 rounded-md bg-pulse-surface flex items-center justify-center shrink-0 ${visual.colorClass}`}
                       >
-                        <Icon size={15} />
+                        <StickFigure pattern={pattern} size={24} />
                       </div>
-                      <div className="min-w-0">
+                      <div className="min-w-0 flex-1">
                         <p className="text-[11px] font-bold text-white leading-tight truncate">
                           {exercise.name}
                         </p>
@@ -88,7 +96,7 @@ export function RoutinePreviewList({ days }: RoutinePreviewListProps) {
                           <span>• {exercise.rest_seconds}s</span>
                         </div>
                       </div>
-                    </div>
+                    </button>
                   )
                 })}
               </div>
@@ -96,6 +104,10 @@ export function RoutinePreviewList({ days }: RoutinePreviewListProps) {
           </div>
         )
       })}
+
+      {demoExercise && (
+        <ExerciseDemoModal exercise={demoExercise} onClose={() => setDemoExercise(null)} />
+      )}
     </div>
   )
 }

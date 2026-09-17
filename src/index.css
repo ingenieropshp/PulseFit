@@ -27,3 +27,77 @@
 ::-webkit-scrollbar {
   display: none;
 }
+
+/* ==========================================================================
+   Animaciones del "muñeco" de ejemplo por ejercicio (componente StickFigure).
+   Cada patrón de movimiento anima una parte distinta del cuerpo; el resto
+   queda estático. Se usa `alternate` para que la animación vaya y vuelva
+   sola, simulando la repetición del ejercicio.
+   ========================================================================== */
+
+@keyframes figure-squat-legs {
+  from { transform: scaleY(1) translateY(0); }
+  to { transform: scaleY(0.82) translateY(6px); }
+}
+@keyframes figure-squat-torso {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(10deg); }
+}
+.figure-anim-squat-legs { animation: figure-squat-legs 1.3s ease-in-out infinite alternate; }
+.figure-anim-squat-torso { animation: figure-squat-torso 1.3s ease-in-out infinite alternate; }
+
+@keyframes figure-hinge-torso {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(48deg); }
+}
+.figure-anim-hinge-torso { animation: figure-hinge-torso 1.4s ease-in-out infinite alternate; }
+
+@keyframes figure-push-h-arms {
+  from { transform: rotate(-35deg); }
+  to { transform: rotate(15deg); }
+}
+.figure-anim-push-h-arms { animation: figure-push-h-arms 1.1s ease-in-out infinite alternate; }
+
+@keyframes figure-push-v-arms {
+  from { transform: rotate(50deg); }
+  to { transform: rotate(-150deg); }
+}
+.figure-anim-push-v-arms { animation: figure-push-v-arms 1.2s ease-in-out infinite alternate; }
+
+@keyframes figure-pull-arms {
+  from { transform: rotate(-20deg); }
+  to { transform: rotate(35deg); }
+}
+.figure-anim-pull-arms { animation: figure-pull-arms 1.1s ease-in-out infinite alternate; }
+
+@keyframes figure-curl-arms {
+  from { transform: rotate(10deg); }
+  to { transform: rotate(-90deg); }
+}
+.figure-anim-curl-arms { animation: figure-curl-arms 0.9s ease-in-out infinite alternate; }
+
+@keyframes figure-core-pulse {
+  from { opacity: 0.55; transform: scale(1); }
+  to { opacity: 1; transform: scale(1.04); }
+}
+.figure-anim-core-pulse {
+  animation: figure-core-pulse 1.6s ease-in-out infinite alternate;
+  transform-origin: center;
+}
+
+@keyframes figure-calf-whole {
+  from { transform: translateY(0); }
+  to { transform: translateY(-4px); }
+}
+.figure-anim-calf-whole { animation: figure-calf-whole 0.8s ease-in-out infinite alternate; }
+
+@keyframes figure-cardio-leg-left {
+  from { transform: rotate(-20deg); }
+  to { transform: rotate(20deg); }
+}
+@keyframes figure-cardio-leg-right {
+  from { transform: rotate(20deg); }
+  to { transform: rotate(-20deg); }
+}
+.figure-anim-cardio-leg-left { animation: figure-cardio-leg-left 0.5s ease-in-out infinite alternate; }
+.figure-anim-cardio-leg-right { animation: figure-cardio-leg-right 0.5s ease-in-out infinite alternate; }
